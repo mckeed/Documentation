@@ -30,13 +30,13 @@ The definition method takes a map of parameters, and a closure.
 The supported parameters are:
 
 *name*
-    The name of the device handler
+    The name of the Device Handler
 *namespace*
-    The namespace for this device handler. This should be your github user name. This is used when looking up device handlers by name to ensure the correct one is found, even if someone else has used the same name.
+    The namespace for this Device Handler. This should be your github user name. This is used when looking up Device Handlers by name to ensure the correct one is found, even if someone else has used the same name.
 *author*
-    The author of this device handler.
+    The author of this Device Handler.
 
-The closure defines the capabilities, attributes, commands, and fingerprint information for your device handler.
+The closure defines the capabilities, attributes, commands, and fingerprint information for your Device Handler.
 
 ----
 
@@ -59,7 +59,7 @@ The argument to the ``capability`` method is the Capability name.
 Attributes
 ----------
 
-If you need to define a custom attribute for your device handler, call the ``attribute()`` method in the closure passed to the ``definition()`` method:
+If you need to define a custom attribute for your Device Handler, call the ``attribute()`` method in the closure passed to the ``definition()`` method:
 
 **attribute(String attributeName, String attributeType, List possibleValues = null)**
 
@@ -86,12 +86,12 @@ If you need to define a custom attribute for your device handler, call the ``att
 Commands
 --------
 
-To define a custom command for your device handler, call the ``command()`` method in the closure passed to the ``definition()`` method:
+To define a custom command for your Device Handler, call the ``command()`` method in the closure passed to the ``definition()`` method:
 
 **command(String commandName, List parameterTypes = [])**
 
 *commandName*
-    The name of the command. You must also define a method in your device handler with the same name.
+    The name of the command. You must also define a method in your Device Handler with the same name.
 *parameterTypes*
     Optional. An ordered list of the parameter types for the command method, if needed.
 
@@ -124,9 +124,9 @@ Fingerprinting
 When a ZigBee or Z-Wave device is added to the SmartThings hub, we need a way to determine which device type to assign it.
 This process is known as a "join" process, or "fingerprinting".
 
-Device handlers define "fingerprints" to specify which devices or what kinds of devices they support.
-Then, when a device is added, its join information is compared to all fingerprints in the default device types and your
-self-published handlers to determine which type of device it is and assign it a handler.
+Device Handlers define "fingerprints" to specify which devices or what kinds of devices they support.
+Then, when a device is added, its join information is compared to all fingerprints in the default handlers and your
+self-published handlers to determine which type of device it is..
 
 The fingerprinting process differs between ZigBee and Z-Wave devices.
 
@@ -161,7 +161,7 @@ Z-Wave fingerprinting
 ^^^^^^^^^^^^^^^^^^^^^
 
 Z-Wave fingerprints used to be based on the format used for ZigBee, but there is now a new format that is preferred.
-You may see the original fingerprints on older device handlers; see below for information on the legacy format.
+You may see the original fingerprints on older Device Handlers; see below for information on the legacy format.
 
 The best place to start is to add your device to SmartThings and look for the *Raw Description* in its details view
 in the SmartThings developer tools.
@@ -221,7 +221,7 @@ Not all fields will be present for every device.
 New Z-Wave fingerprint format
 +++++++++++++++++++++++++++++
 
-If you're writing a device handler for a specific device, you can base the fingerprint on the manufacturer info.
+If you're writing a Device Handler for a specific device, you can base the fingerprint on the manufacturer info.
 For example, the fingerprint to match the raw description example above would be:
 
 .. code-block:: groovy
@@ -234,7 +234,7 @@ to make it valid Groovy code.
 Sometimes related products are grouped under the same 'prod' ID. In that case you can use a fingerprint without the
 'model' parameter.
 
-If you are writing a general device handler that supports all devices of a certain type, you can still base the
+If you are writing a general Device Handler that supports all devices of a certain type, you can still base the
 fingerprint on command class support.
 
 .. code-block:: groovy
@@ -264,7 +264,7 @@ The supported parameters are:
 
 When multiple device fingerprints match an added Z-Wave device, they are ranked first by number of 'mfr', 'prod', and
 'model' parameters, then by the number of command classes listed, and finally by the length of the 'type', 'ff', or
-'ui' parameter. When fingerprints have the same rank, self-published device handlers take precedence over the default
+'ui' parameter. When fingerprints have the same rank, self-published Device Handlers take precedence over the default
 production ones.
 
 Legacy Z-Wave fingeprint format
@@ -291,7 +291,7 @@ Fingerprinting best practices
 Add multiple fingerprints
 +++++++++++++++++++++++++
 
-A device handler can have multiple fingerprints in order to work with multiple versions of a device.
+A Device Handler can have multiple fingerprints in order to work with multiple versions of a device.
 Each fingerprint is independent. If any of them is the highest ranking match, the device will use your device type.
 
 You can distinguish between the different devices that use the handler by adding the 'deviceJoinName' parameter.
@@ -305,7 +305,7 @@ For example:
     fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0702, 0B05", outClusters: "000A, 0019", manufacturer: "Jasco Products", model: "45857", deviceJoinName: "GE Zigbee In-Wall Dimmer"
 
 If an added device supports the inClusters in the first fingerprint but doesn't match all the extra info in any of the
-next three, it will join with the name of the device type, in this case "ZigBee Dimmer Power."
+next three, it will join with the name from the handler's definition metadata, in this case "ZigBee Dimmer Power."
 
 Device pairing process
 ++++++++++++++++++++++
@@ -319,7 +319,7 @@ If one of the clusters specified in the fingerprint is incorrect, the device wil
 Overly-general fingerprints
 +++++++++++++++++++++++++++
 
-If you wish to publish or share a device handler, you must make sure that the fingerprints do not capture other devices
+If you wish to publish or share a Device Handler, you must make sure that the fingerprints do not capture other devices
 that aren't covered by your handler.
 
 If you copied a working fingerprint from a default or template handler, it would be ambiguous which type should match if
